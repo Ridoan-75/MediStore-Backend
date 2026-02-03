@@ -109,6 +109,7 @@ model Category {
   name        String   @unique
   description String?
   createdAt   DateTime @default(now())
+  imageUrl    String?
   updatedAt   DateTime @updatedAt
 
   medicines Medicine[]
