@@ -24,7 +24,14 @@ const createMedicine = async (
 
   const result = await prisma.medicine.create({
     data: {
-      ...payload,
+      name: payload.name,
+      description: payload.description || "", // ✅ Fix: empty string instead of undefined
+      price: payload.price,
+      stock: payload.stock,
+      imageUrl: payload.imageUrl || null, // ✅ Fix: null instead of undefined
+      categoryId: payload.categoryId,
+      manufacturer: payload.manufacturer || null, // ✅ Fix: null instead of undefined
+      type: payload.type || null, // ✅ Fix: null instead of undefined
       sellerId: userId,
     },
     include: {
