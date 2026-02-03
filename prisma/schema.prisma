@@ -41,12 +41,13 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  medicines Medicine[]
-  orders    Order[]
-  reviews   Review[]
-  sessions  Session[]
-  accounts  Account[]
-  isBanned  Boolean?   @default(false)
+  medicines   Medicine[]
+  orders      Order[]
+  reviews     Review[]
+  sessions    Session[]
+  accounts    Account[]
+  sellerOders OrderItem[]
+  isBanned    Boolean?    @default(false)
 
   @@map("user")
 }
@@ -145,6 +146,7 @@ model Order {
   total           Float
   status          OrderStatus @default(PLACED)
   shippingAddress String
+  sellerId        String
   phone           String
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -154,6 +156,7 @@ model Order {
 
   @@index([customerId])
   @@index([status])
+  @@index([sellerId])
 }
 
 model OrderItem {
@@ -165,6 +168,8 @@ model OrderItem {
 
   order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   medicine Medicine @relation(fields: [medicineId], references: [id])
+  user     User?    @relation(fields: [userId], references: [id])
+  userId   String?
 
   @@index([orderId])
   @@index([medicineId])

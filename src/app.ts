@@ -4,6 +4,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import categoryRouter from "./modules/category/category.router";
 import medicineRouter from "./modules/medicine/medicine.router"; // ✅ Import
+import orderRouter from "./modules/order/order.router";
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.all("/api/auth/*", toNodeHandler(auth));
 
 app.use("/api/categories", categoryRouter);
 app.use("/api/medicines", medicineRouter); // ✅ Add this
-
+app.use("/api/orders", orderRouter)
 app.get("/", (req: Request, res: Response) => {
   res.send("MediStore API is running! 💊");
 });
