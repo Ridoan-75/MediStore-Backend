@@ -123,6 +123,7 @@ model Medicine {
   stock        Int      @default(0)
   imageUrl     String?
   manufacturer String?
+  type         String?
   sellerId     String
   categoryId   String
   isActive     Boolean  @default(true)
