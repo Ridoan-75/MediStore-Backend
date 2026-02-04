@@ -5,46 +5,28 @@ import authGuard from "../../middleware/authGuard";
 
 const userRouter = Express.Router();
 
-// Get all users with filters (Admin only)
-userRouter.get(
-  "/",
-  authGuard(Role.ADMIN), // ✅ Changed
-  userController.getAllUsers
-);
+userRouter.get("/", authGuard(Role.ADMIN), userController.getAllUsers);
 
-// Get user statistics (Admin only)
 userRouter.get(
   "/statistics",
-  authGuard(Role.ADMIN), // ✅ Added
-  userController.getUserStatistics
+  authGuard(Role.ADMIN),
+  userController.getUserStatistics,
 );
 
-// Get user by ID (Admin only)
-userRouter.get(
-  "/:id",
-  authGuard(Role.ADMIN), // ✅ Added
-  userController.getUserById
-);
+userRouter.get("/:id", authGuard(Role.ADMIN), userController.getUserById);
 
-// Update user status - ban/unban (Admin only)
 userRouter.patch(
   "/:id/status",
-  authGuard(Role.ADMIN), // ✅ Changed
-  userController.updateUserStatus // ✅ Fixed name
+  authGuard(Role.ADMIN),
+  userController.updateUserStatus,
 );
 
-// Update user role (Admin only)
 userRouter.patch(
   "/:id/role",
-  authGuard(Role.ADMIN), // ✅ Added
-  userController.updateUserRole
+  authGuard(Role.ADMIN),
+  userController.updateUserRole,
 );
 
-// Delete user (Admin only)
-userRouter.delete(
-  "/:id",
-  authGuard(Role.ADMIN), // ✅ Added
-  userController.deleteUser
-);
+userRouter.delete("/:id", authGuard(Role.ADMIN), userController.deleteUser);
 
 export default userRouter;

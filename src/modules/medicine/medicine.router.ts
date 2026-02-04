@@ -8,7 +8,7 @@ const medicineRouter = Express.Router();
 
 medicineRouter.post(
   "/",
-  authGuard(Role.SELLER, Role.ADMIN), // ✅ Changed
+  authGuard(Role.SELLER, Role.ADMIN), 
   medicineController.createMedicine,
 );
 
@@ -16,7 +16,7 @@ medicineRouter.get("/", medicineController.getAllMedicines);
 
 medicineRouter.get(
   "/seller",
-  authGuard(Role.SELLER), // ✅ Changed
+  authGuard(Role.SELLER),
   medicineController.getAllMedicinesBySellerId,
 );
 
@@ -24,13 +24,13 @@ medicineRouter.get("/:id", medicineController.getMedicineById);
 
 medicineRouter.put(
   "/:id",
-  authGuard(Role.SELLER, Role.ADMIN), // ✅ Changed
+  authGuard(Role.SELLER, Role.ADMIN),
   medicineController.updateMedicine,
 );
 
 medicineRouter.delete(
   "/:id",
-  authGuard(Role.SELLER, Role.ADMIN), // ✅ Changed
+  authGuard(Role.SELLER, Role.ADMIN), 
   medicineController.deleteMedicine,
 );
 

@@ -8,7 +8,7 @@ const categoryRouter = Express.Router();
 
 categoryRouter.post(
   "/",
-  authGuard(Role.ADMIN), // ✅ Use Role.ADMIN
+  authGuard(Role.ADMIN), 
   categoryController.createCategory,
 );
 

@@ -5,30 +5,29 @@ import authGuard from "../../middleware/authGuard";
 
 const reviewRouter = Express.Router();
 
-// Create review (Customer only)
+
 reviewRouter.post(
   "/",
-  authGuard(Role.CUSTOMER), // ✅ Changed
+  authGuard(Role.CUSTOMER), 
   reviewController.createCustomerReview,
 );
 
-// Get all reviews for a medicine (Public)
+
 reviewRouter.get(
   "/:medicineId",
-  reviewController.getAllReviewsByMedicineId, // ✅ Fixed name
+  reviewController.getAllReviewsByMedicineId, 
 );
 
-// Update review (Customer only - own review)
+
 reviewRouter.put(
   "/:reviewId",
-  authGuard(Role.CUSTOMER), // ✅ Added
+  authGuard(Role.CUSTOMER),
   reviewController.updateCustomerReview,
 );
 
-// Delete review (Customer only - own review)
 reviewRouter.delete(
   "/:reviewId",
-  authGuard(Role.CUSTOMER), // ✅ Added
+  authGuard(Role.CUSTOMER), 
   reviewController.deleteCustomerReview,
 );
 

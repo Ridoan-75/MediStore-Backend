@@ -71,8 +71,6 @@ const getAllMedicines = async (req: Request, res: Response) => {
 const getMedicineById = async (req: Request, res: Response) => {
   try {
     let { id } = req.params;
-
-    // Ensure id is always a string
     if (Array.isArray(id)) {
       id = id[0];
     }
@@ -106,8 +104,6 @@ const updateMedicine = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-
-    // Ensure id is always a string
     if (Array.isArray(id)) {
       id = id[0];
     }

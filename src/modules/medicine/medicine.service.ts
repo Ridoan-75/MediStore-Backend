@@ -25,13 +25,13 @@ const createMedicine = async (
   const result = await prisma.medicine.create({
     data: {
       name: payload.name,
-      description: payload.description || "", // ✅ Fix: empty string instead of undefined
+      description: payload.description || "", 
       price: payload.price,
       stock: payload.stock,
-      imageUrl: payload.imageUrl || null, // ✅ Fix: null instead of undefined
+      imageUrl: payload.imageUrl || null, 
       categoryId: payload.categoryId,
-      manufacturer: payload.manufacturer || null, // ✅ Fix: null instead of undefined
-      type: payload.type || null, // ✅ Fix: null instead of undefined
+      manufacturer: payload.manufacturer || null, 
+      type: payload.type || null, 
       sellerId: userId,
     },
     include: {
@@ -69,7 +69,7 @@ const getAllMedicines = async ({
   sortBy: string;
   sortOrder: string;
 }) => {
-  const andConditions: any[] = [{ isActive: true }]; // ✅ Only active medicines
+  const andConditions: any[] = [{ isActive: true }]; 
 
   if (category) {
     andConditions.push({
@@ -210,8 +210,6 @@ const updateMedicine = async (
   if (!medicine) {
     throw new Error("Medicine not found or unauthorized");
   }
-
-  // If categoryId is being updated, verify it exists
   if (payload.categoryId) {
     const categoryExists = await prisma.category.findUnique({
       where: { id: payload.categoryId },

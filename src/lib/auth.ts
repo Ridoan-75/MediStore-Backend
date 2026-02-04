@@ -20,43 +20,9 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   trustedOrigins: [process.env.FRONTEND_URL!],
   
-  cookie: {
-    namePrefix: "medistore",
-    attributes: {
-      sameSite: "none",
-      secure: true,
-    },
-  },
-  
   advanced: {
-    useSecureCookies: true,
-  },
-
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        defaultValue: "CUSTOMER",
-      },
-      isActive: {
-        type: "boolean",
-        defaultValue: true,
-      },
-      phone: {
-        type: "string",
-        required: false,
-      },
-      address: {
-        type: "string",
-        required: false,
-      },
-    },
-  },
-
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    crossSubDomainCookies: {
+      enabled: false,
     },
   },
 
@@ -178,6 +144,34 @@ export const auth = betterAuth({
         console.error("Verification email failed:", error.message);
         throw error;
       }
+    },
+  },
+
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
+
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "CUSTOMER",
+      },
+      isActive: {
+        type: "boolean",
+        defaultValue: true,
+      },
+      phone: {
+        type: "string",
+        required: false,
+      },
+      address: {
+        type: "string",
+        required: false,
+      },
     },
   },
 

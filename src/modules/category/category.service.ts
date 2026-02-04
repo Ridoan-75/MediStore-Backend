@@ -9,7 +9,6 @@ const createCategory = async ({
   description?: string;
   imageUrl?: string;
 }) => {
-  // Implementation for creating a category in the database goes here
   const result = await prisma.category.create({
     data: {
       name,
@@ -38,7 +37,6 @@ const updateCategory = async (
   categoryId: string,
   data: { name?: string; description?: string; imageUrl?: string },
 ) => {
-  // Implementation for updating a category in the database goes here
   return await prisma.category.update({
     where: {
       id: categoryId,
@@ -48,7 +46,6 @@ const updateCategory = async (
 };
 
 const deleteCategory = async (categoryId: string) => {
-  // Implementation for deleting a category from the database goes here
   return await prisma.category.delete({
     where: {
       id: categoryId,

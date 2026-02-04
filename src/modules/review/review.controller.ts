@@ -20,11 +20,10 @@ const createCustomerReview = async (req: Request, res: Response) => {
 
     const payload: CustomerReviewType = {
       medicineId: req.body.medicineId,
-      rating: parseInt(req.body.rating), // ✅ Parse to number
+      rating: parseInt(req.body.rating),
       comment: req.body.comment,
     };
 
-    // Validation
     if (!payload.medicineId) {
       return res.status(400).json({
         success: false,
@@ -66,7 +65,7 @@ const getAllReviewsByMedicineId = async (req: Request, res: Response) => {
   try {
     const { medicineId } = req.params;
 
-    if (!medicineId) {
+    if (!medicineId || typeof medicineId !== "string") {
       return res.status(400).json({
         success: false,
         message: "Medicine ID is required",
@@ -98,6 +97,13 @@ const updateCustomerReview = async (req: Request, res: Response) => {
       return res.status(401).json({
         success: false,
         message: "User not authenticated",
+      });
+    }
+
+    if (!reviewId || typeof reviewId !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Review ID is required",
       });
     }
 
@@ -149,6 +155,13 @@ const deleteCustomerReview = async (req: Request, res: Response) => {
       return res.status(401).json({
         success: false,
         message: "User not authenticated",
+      });
+    }
+
+    if (!reviewId || typeof reviewId !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Review ID is required",
       });
     }
 

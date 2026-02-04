@@ -1,29 +1,24 @@
 import { Role } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
-import { CustomerReviewType } from "./review.controller"; // ✅ Fixed name
+import { CustomerReviewType } from "./review.controller";
 
 const createCustomerReview = async (
   userId: string,
   payload: CustomerReviewType,
 ) => {
-  // Validate rating (redundant but safe)
   if (payload.rating < 1 || payload.rating > 5) {
     throw new Error("Rating must be between 1 and 5");
   }
-
-  // Check if user is a customer
   const isCustomer = await prisma.user.findUnique({
     where: {
       id: userId,
-      role: Role.CUSTOMER, // ✅ Changed
+      role: Role.CUSTOMER,
     },
   });
 
   if (!isCustomer) {
     throw new Error("Only customers can create reviews");
   }
-
-  // Check if medicine exists
   const medicine = await prisma.medicine.findUnique({
     where: { id: payload.medicineId },
   });
@@ -32,12 +27,11 @@ const createCustomerReview = async (
     throw new Error("Medicine not found");
   }
 
-  // Check if user has ordered this medicine
   const orderItem = await prisma.orderItem.findFirst({
     where: {
       medicineId: payload.medicineId,
       order: {
-        customerId: userId, // ✅ Changed from userId
+        customerId: userId,
       },
     },
   });
@@ -46,11 +40,9 @@ const createCustomerReview = async (
     throw new Error("You can only review medicines you have ordered");
   }
 
-  // Check if user already reviewed this medicine
   const existingReview = await prisma.review.findUnique({
     where: {
       customerId_medicineId: {
-        // ✅ Changed from userId_medicineId
         customerId: userId,
         medicineId: payload.medicineId,
       },
@@ -61,17 +53,15 @@ const createCustomerReview = async (
     throw new Error("You have already reviewed this medicine");
   }
 
-  // Create the review
   const review = await prisma.review.create({
     data: {
-      customerId: userId, // ✅ Changed from userId
+      customerId: userId,
       medicineId: payload.medicineId,
       rating: payload.rating,
       comment: payload.comment || null,
     },
     include: {
       customer: {
-        // ✅ Changed from user
         select: {
           id: true,
           name: true,
@@ -92,7 +82,6 @@ const createCustomerReview = async (
 };
 
 const getAllReviewsByMedicineId = async (medicineId: string) => {
-  // Check if medicine exists
   const medicine = await prisma.medicine.findUnique({
     where: { id: medicineId },
   });
@@ -107,7 +96,6 @@ const getAllReviewsByMedicineId = async (medicineId: string) => {
     },
     include: {
       customer: {
-        // ✅ Changed from user
         select: {
           id: true,
           name: true,
@@ -120,7 +108,6 @@ const getAllReviewsByMedicineId = async (medicineId: string) => {
     },
   });
 
-  // Calculate average rating
   const avgRating =
     reviews.length > 0
       ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
@@ -138,7 +125,6 @@ const updateCustomerReview = async (
   userId: string,
   payload: { rating?: number; comment?: string },
 ) => {
-  // Find the review
   const review = await prisma.review.findUnique({
     where: { id: reviewId },
   });
@@ -146,19 +132,14 @@ const updateCustomerReview = async (
   if (!review) {
     throw new Error("Review not found");
   }
-
-  // Check ownership
   if (review.customerId !== userId) {
-    // ✅ Changed from userId
     throw new Error("Unauthorized: You can only update your own reviews");
   }
 
-  // Validate rating if provided
   if (payload.rating && (payload.rating < 1 || payload.rating > 5)) {
     throw new Error("Rating must be between 1 and 5");
   }
 
-  // Update the review
   const updatedReview = await prisma.review.update({
     where: { id: reviewId },
     data: {
@@ -167,7 +148,6 @@ const updateCustomerReview = async (
     },
     include: {
       customer: {
-        // ✅ Changed from user
         select: {
           id: true,
           name: true,
@@ -188,7 +168,6 @@ const updateCustomerReview = async (
 };
 
 const deleteCustomerReview = async (reviewId: string, userId: string) => {
-  // Find the review
   const review = await prisma.review.findUnique({
     where: { id: reviewId },
   });
@@ -197,13 +176,10 @@ const deleteCustomerReview = async (reviewId: string, userId: string) => {
     throw new Error("Review not found");
   }
 
-  // Check ownership
   if (review.customerId !== userId) {
-    // ✅ Changed from userId
     throw new Error("Unauthorized: You can only delete your own reviews");
   }
 
-  // Delete the review
   await prisma.review.delete({
     where: { id: reviewId },
   });

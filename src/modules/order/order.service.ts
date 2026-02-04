@@ -20,7 +20,7 @@ const createOrder = async (
     const medicines = await tx.medicine.findMany({
       where: {
         id: { in: medicineIds },
-        isActive: true, // ✅ Changed from status
+        isActive: true, 
       },
       select: {
         id: true,
@@ -60,25 +60,25 @@ const createOrder = async (
 
       return {
         medicineId: item.medicineId,
-        sellerId: medicine.sellerId, // ✅ Now included
+        sellerId: medicine.sellerId,
         quantity: item.quantity,
         price: medicine.price,
       };
     });
 
-    const order = await tx.order.create({ // ✅ Changed from orders
+    const order = await tx.order.create({ 
       data: {
-        customerId: userId, // ✅ Changed from userId
-        total: totalAmount, // ✅ Changed from totalAmount
+        customerId: userId, 
+        total: totalAmount,
         phone: payload.phone,
         shippingAddress: payload.shippingAddress,
-        status: OrderStatus.PLACED, // ✅ Use enum
-        items: { // ✅ Changed from orderItems
+        status: OrderStatus.PLACED,
+        items: { 
           create: orderItemData,
         },
       },
       include: {
-        items: { // ✅ Changed from orderItems
+        items: {
           include: {
             medicine: {
               select: {
@@ -99,7 +99,7 @@ const createOrder = async (
       },
     });
 
-    // Update stock
+
     for (const item of payload.orderItems) {
       const medicine = medicines.find((m) => m.id === item.medicineId)!;
       const newStock = medicine.stock - item.quantity;
@@ -108,7 +108,7 @@ const createOrder = async (
         where: { id: item.medicineId },
         data: {
           stock: newStock,
-          isActive: newStock > 0, // ✅ Changed from status
+          isActive: newStock > 0, 
         },
       });
     }
@@ -118,10 +118,10 @@ const createOrder = async (
 };
 
 const getUserOrders = async (userId: string) => {
-  return await prisma.order.findMany({ // ✅ Changed from orders
-    where: { customerId: userId }, // ✅ Changed from userId
+  return await prisma.order.findMany({ 
+    where: { customerId: userId },
     include: {
-      items: { // ✅ Changed from orderItems
+      items: { 
         include: {
           medicine: {
             select: {
@@ -138,10 +138,10 @@ const getUserOrders = async (userId: string) => {
 };
 
 const getOrderById = async (orderId: string, userId: string) => {
-  const order = await prisma.order.findUnique({ // ✅ Changed from orders
+  const order = await prisma.order.findUnique({ 
     where: { id: orderId },
     include: {
-      items: { // ✅ Changed from orderItems
+      items: {
         include: {
           medicine: true,
           seller: {
@@ -160,7 +160,7 @@ const getOrderById = async (orderId: string, userId: string) => {
     throw new Error("Order not found");
   }
 
-  if (order.customerId !== userId) { // ✅ Changed from userId
+  if (order.customerId !== userId) { 
     throw new Error("Unauthorized access to order");
   }
 
@@ -168,16 +168,16 @@ const getOrderById = async (orderId: string, userId: string) => {
 };
 
 const getOrderBySellerId = async (sellerId: string) => {
-  return await prisma.order.findMany({ // ✅ Changed from orders
+  return await prisma.order.findMany({
     where: {
-      items: { // ✅ Changed from orderItems
+      items: { 
         some: {
           sellerId: sellerId,
         },
       },
     },
     include: {
-      items: { // ✅ Changed from orderItems
+      items: { 
         where: {
           sellerId: sellerId,
         },
@@ -185,7 +185,7 @@ const getOrderBySellerId = async (sellerId: string) => {
           medicine: true,
         },
       },
-      customer: { // ✅ Changed from user
+      customer: { 
         select: {
           id: true,
           name: true,
@@ -200,8 +200,8 @@ const getOrderBySellerId = async (sellerId: string) => {
 const updateOrderStatus = async (
   orderId: string,
   status: OrderStatus,
-  userId: string, // ✅ Added
-  userRole: string, // ✅ Added
+  userId: string, 
+  userRole: string, 
 ) => {
   const validStatuses = Object.values(OrderStatus);
   if (!validStatuses.includes(status)) {
@@ -210,7 +210,7 @@ const updateOrderStatus = async (
     );
   }
 
-  const order = await prisma.order.findUnique({ // ✅ Changed from orders
+  const order = await prisma.order.findUnique({ 
     where: { id: orderId },
     include: {
       items: {
@@ -225,7 +225,6 @@ const updateOrderStatus = async (
     throw new Error("Order not found");
   }
 
-  // Authorization check
   if (userRole !== "ADMIN") {
     const isSeller = order.items.some((item) => item.sellerId === userId);
     if (!isSeller) {
@@ -233,11 +232,11 @@ const updateOrderStatus = async (
     }
   }
 
-  return await prisma.order.update({ // ✅ Changed from orders
+  return await prisma.order.update({ 
     where: { id: orderId },
     data: { status },
     include: {
-      items: { // ✅ Changed from orderItems
+      items: { 
         include: {
           medicine: {
             select: {
@@ -253,9 +252,9 @@ const updateOrderStatus = async (
 };
 
 const getAllOrders = async () => {
-  return await prisma.order.findMany({ // ✅ Changed from orders
+  return await prisma.order.findMany({
     include: {
-      items: { // ✅ Changed from orderItems
+      items: { 
         include: {
           medicine: true,
           seller: {
@@ -267,7 +266,7 @@ const getAllOrders = async () => {
           },
         },
       },
-      customer: { // ✅ Changed from user
+      customer: { 
         select: {
           id: true,
           name: true,
@@ -280,13 +279,13 @@ const getAllOrders = async () => {
 };
 
 const trackOrderStatus = async (orderId: string, userId: string) => {
-  const order = await prisma.order.findUnique({ // ✅ Changed from orders
+  const order = await prisma.order.findUnique({ 
     where: { id: orderId },
     select: {
       id: true,
       status: true,
       updatedAt: true,
-      customerId: true, // ✅ Changed from userId
+      customerId: true,
     },
   });
 
@@ -294,7 +293,7 @@ const trackOrderStatus = async (orderId: string, userId: string) => {
     throw new Error("Order not found");
   }
 
-  if (order.customerId !== userId) { // ✅ Changed from userId
+  if (order.customerId !== userId) { 
     throw new Error("Unauthorized access to order");
   }
 

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { orderService } from "./order.service";
-import { OrderStatus } from "@prisma/client"; 
+import { OrderStatus, Role } from "generated/prisma/enums";
+
 
 
 const createOrder = async (req: Request, res: Response) => {
@@ -135,6 +136,13 @@ const getOrderById = async (req: Request, res: Response) => {
       });
     }
 
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order ID",
+      });
+    }
+
     const order = await orderService.getOrderById(id, user.id);
 
     res.status(200).json({
@@ -205,6 +213,13 @@ const updateOrderStatus = async (req: Request, res: Response) => {
       });
     }
 
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order ID",
+      });
+    }
+
     if (!status) {
       return res.status(400).json({
         success: false,
@@ -212,7 +227,6 @@ const updateOrderStatus = async (req: Request, res: Response) => {
       });
     }
 
-    // Validate status enum
     if (!Object.values(OrderStatus).includes(status)) {
       return res.status(400).json({
         success: false,
@@ -224,7 +238,7 @@ const updateOrderStatus = async (req: Request, res: Response) => {
       id,
       status as OrderStatus,
       user.id,
-      user.role as string
+      user.role as Role
     );
 
     res.status(200).json({
@@ -282,6 +296,13 @@ const trackOrderStatus = async (req: Request, res: Response) => {
       return res.status(401).json({
         success: false,
         message: "Unauthorized",
+      });
+    }
+
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order ID",
       });
     }
 

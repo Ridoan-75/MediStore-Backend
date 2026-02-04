@@ -47,7 +47,7 @@ const getAllUsers = async (filters: UserFilters) => {
       email: true,
       phone: true,
       role: true,
-      isActive: true, // ✅ Changed from status
+      isActive: true, 
       emailVerified: true,
       createdAt: true,
       image: true,
@@ -105,7 +105,7 @@ const updateUserStatus = async (id: string, isActive: boolean) => {
   return await prisma.user.update({
     where: { id },
     data: {
-      isActive, // ✅ Changed from status
+      isActive, 
     },
     select: {
       id: true,
@@ -124,7 +124,7 @@ const updateUserRole = async (id: string, role: string) => {
     throw new Error("User not found");
   }
 
-  // Validate role
+
   const validRoles = Object.values(Role);
   if (!validRoles.includes(role as Role)) {
     throw new Error(`Invalid role. Must be one of: ${validRoles.join(", ")}`);

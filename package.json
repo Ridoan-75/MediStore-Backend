@@ -23,10 +23,14 @@
   },
   "homepage": "https://github.com/Ridoan-75/MediStore-Backend#readme",
   "devDependencies": {
+    "@types/bun": "^1.3.8",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^25.2.0",
     "@types/nodemailer": "^7.0.9",
+    "@types/parse-json": "^4.0.2",
+    "@types/react-transition-group": "^4.4.12",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"

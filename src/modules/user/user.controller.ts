@@ -32,6 +32,13 @@ const getUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
+
     const user = await userService.getUserById(id);
 
     res.status(200).json({
@@ -55,6 +62,13 @@ const updateUserStatus = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { isActive } = req.body;
+
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
 
     if (typeof isActive !== "boolean") {
       return res.status(400).json({
@@ -86,6 +100,13 @@ const updateUserRole = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { role } = req.body;
+
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
 
     if (!role) {
       return res.status(400).json({
@@ -124,6 +145,13 @@ const updateUserRole = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (typeof id !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user ID",
+      });
+    }
 
     await userService.deleteUser(id);
 

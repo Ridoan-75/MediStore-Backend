@@ -51,12 +51,12 @@ async function seedAdmin() {
           emailVerified: true,
         },
       });
-      console.log("✅ Admin user created successfully!");
+      console.log("Admin user created successfully!");
     } else {
       throw new Error(`Sign-up failed: ${JSON.stringify(responseData)}`);
     }
   } catch (error) {
-    console.error("❌ Error:", error);
+    console.error("Error:", error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();
