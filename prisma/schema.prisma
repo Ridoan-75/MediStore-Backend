@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../../generated/prisma"
 }
 
 datasource db {
@@ -14,176 +8,244 @@ datasource db {
 }
 
 enum Role {
-  CUSTOMER
-  SELLER
   ADMIN
+  SELLER
+  CUSTOMER
+}
+
+enum DosageForm {
+  TABLET
+  CAPSULE
+  SYRUP
+  INJECTION
+  OINTMENT
+  DROPS
+  INHALER
+  PATCH
+  SUPPOSITORY
+  POWDER
+}
+
+enum Unit {
+  MG
+  ML
+  G
+  IU
+  MCG
+}
+
+enum MedicineStatus {
+  AVAILABLE
+  OUT_OF_STOCK
+  DISCONTINUED
 }
 
 enum OrderStatus {
   PLACED
+  CONFIRMED
   PROCESSING
   SHIPPED
   DELIVERED
   CANCELLED
 }
 
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  MOBILE_PAYMENT
+  CASH_ON_DELIVERY
+}
+
+
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  name          String?
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
   image         String?
-  password      String?
-  role          Role     @default(CUSTOMER)
-  phone         String?
-  address       String?
-  isActive      Boolean  @default(true)
-  emailVerified Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  role          String    @default("user")
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  dob           DateTime?
+  phone         String?   @default("")
+  address       String?   @default("") @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  medicines      Medicine[]
-  orders         Order[]
-  reviews        Review[]
-  sessions       Session[]
-  accounts       Account[]
-  sellerOrders   OrderItem[] @relation("SellerOrders") // ✅ Fixed relation name
+  sessions  Session[]
+  accounts  Account[]
+  medicines Medicine[]
+  reviews   Review[]
+  orders    Order[]
+  cart      Cart?
 
+  @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
+  id        String   @id
   expiresAt DateTime
-  token     String   @unique
-  ipAddress String?
-  userAgent String?
+  token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([token])
   @@index([userId])
   @@map("session")
 }
 
 model Account {
-  id           String    @id @default(cuid())
-  userId       String
-  accountId    String
-  providerId   String
-  accessToken  String?
-  refreshToken String?
-  idToken      String?
-  expiresAt    DateTime?
-  password     String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id                    String   @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
+  password              String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  @@unique([providerId, accountId])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@map("account")
 }
 
 model Verification {
-  id         String   @id @default(cuid())
+  id         String   @id
   identifier String
   value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@unique([identifier, value])
   @@index([identifier])
   @@map("verification")
 }
 
+model Cart {
+  id        String     @id @default(uuid()) @db.Uuid
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id])
+  items CartItem[]
+
+  @@map("cart")
+}
+
+model CartItem {
+  id         String   @id @default(uuid()) @db.Uuid
+  cartId     String   @db.Uuid
+  medicineId String   @db.Uuid
+  quantity   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  cart     Cart     @relation(fields: [cartId], references: [id])
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+
+  @@index([cartId])
+  @@index([medicineId])
+  @@map("cart_item")
+}
+
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String?
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String     @id @default(uuid()) @db.Uuid
+  name      String     @db.VarChar(255)
+  slug      String     @unique @db.VarChar(255)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   medicines Medicine[]
+
+  @@map("category")
 }
 
 model Medicine {
-  id           String   @id @default(cuid())
-  name         String
-  description  String
-  price        Float
-  stock        Int      @default(0)
-  imageUrl     String?
-  manufacturer String?
-  type         String?
-  sellerId     String
-  categoryId   String
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String         @id @default(uuid()) @db.Uuid
+  name        String         @db.VarChar(255)
+  brand       String         @db.VarChar(255)
+  description String         @db.Text
+  slug        String         @unique @db.VarChar(255)
+  dosageForm  DosageForm
+  unit        Unit
+  strength    String         @db.VarChar(100)
+  stock       Int
+  price       Float
+  image       String
+  status      MedicineStatus @default(AVAILABLE)
+  isOTCOnly   Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
-  seller     User        @relation(fields: [sellerId], references: [id])
-  category   Category    @relation(fields: [categoryId], references: [id])
-  orderItems OrderItem[]
+  sellerId   String
+  categoryId String @db.Uuid
+
+  seller     User       @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   reviews    Review[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
 
-  @@index([categoryId])
-  @@index([sellerId])
+  @@index([sellerId, categoryId])
+  @@map("medicine")
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  customerId      String
-  total           Float
-  status          OrderStatus @default(PLACED)
-  shippingAddress String
-  phone           String
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id              String        @id @default(uuid()) @db.Uuid
+  status          OrderStatus   @default(PLACED)
+  totalAmount     Float
+  shippingAddress Json
+  paymentMethod   PaymentMethod @default(CASH_ON_DELIVERY)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
-  customer User        @relation(fields: [customerId], references: [id])
-  items    OrderItem[]
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([customerId])
-  @@index([status])
+  items OrderItem[]
+
+  @@map("order")
 }
 
 model OrderItem {
-  id         String @id @default(cuid())
-  orderId    String
-  medicineId String
-  sellerId   String // ✅ Added sellerId
+  id         String @id @default(uuid()) @db.Uuid
   quantity   Int
   price      Float
+  orderId    String @db.Uuid
+  medicineId String @db.Uuid
 
   order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  medicine Medicine @relation(fields: [medicineId], references: [id])
-  seller   User     @relation("SellerOrders", fields: [sellerId], references: [id]) // ✅ Fixed
+  medicine Medicine @relation(fields: [medicineId], references: [id], onDelete: Restrict)
 
-  @@index([orderId])
-  @@index([medicineId])
-  @@index([sellerId]) // ✅ Added index
+  @@map("order_item")
 }
 
 model Review {
-  id         String   @id @default(cuid())
-  customerId String
-  medicineId String
-  rating     Int
-  comment    String?
+  id         String   @id @default(uuid()) @db.Uuid
+  rating     Int      @db.SmallInt
+  content    String   @db.Text
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  medicineId String   @db.Uuid
+  userId     String
 
-  customer User     @relation(fields: [customerId], references: [id])
   medicine Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([customerId, medicineId])
-  @@index([medicineId])
+  @@map("review")
 }
