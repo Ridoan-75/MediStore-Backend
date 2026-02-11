@@ -1,68 +1,55 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { admin } from "better-auth/plugins";
-
-import {
-  BETTER_AUTH_URL,
-  FRONTEND_URL,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-} from "../config/env";
-import { adminRole, customerRole, sellerRole } from "../config/permission";
 import { prisma } from "./prisma";
-import { Role } from "../generated/prisma/enums";
 
 export const auth = betterAuth({
-  baseURL: BETTER_AUTH_URL,
-  trustedOrigins: [
-    BETTER_AUTH_URL as string,
-    FRONTEND_URL as string,
-    "http://localhost:3000",
-  ],
+  baseURL: process.env.BETTER_AUTH_URL,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false,
+    autoSignIn: false,
   },
-  socialProviders: {
-    github: {
-      clientId: GOOGLE_CLIENT_ID as string,
-      clientSecret: GOOGLE_CLIENT_SECRET as string,
-    },
-  },
+
+  trustedOrigins: [
+    process.env.FRONTEND_URL!,
+    "https://medistoreclient.vercel.app",
+  ],
+
   user: {
     additionalFields: {
       role: {
         type: "string",
-        required: true,
-        defaultValue: "CUSTOMER",
-      },
-      dob: {
-        type: "date",
+        // defaultValue: "CUSTOMER",
         required: false,
       },
       phone: {
         type: "string",
+
         required: false,
-        defaultValue: "",
       },
       address: {
         type: "string",
+
         required: false,
-        defaultValue: "",
+      },
+      status: {
+        type: "string",
+        defaultValue: "ACTIVE",
+        required: false,
       },
     },
   },
-  plugins: [
-    admin({
-      adminRoles: [Role.ADMIN],
-      defaultRole: "CUSTOMER",
-      roles: {
-        [Role.ADMIN]: adminRole,
-        [Role.SELLER]: sellerRole,
-        [Role.CUSTOMER]: customerRole,
-      },
-    }),
-  ],
+
+  socialProviders: {
+    google: {
+      prompt: "select_account consent",
+      accessType: "offline",
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
 });

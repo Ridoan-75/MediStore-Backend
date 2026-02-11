@@ -1,42 +1,36 @@
+import express from "express";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
-import express from "express";
-import createError from "http-errors";
-import { FRONTEND_URL } from "./config/env";
 import { auth } from "./lib/auth";
-import { errorHandler } from "./middlewares/error-handler";
-import { v1Routes } from "./routes";
+import categoryRouter from "./modules/category/category.router";
+import medicineRouter from "./modules/medicine/medicine.router";
+import orderRouter from "./modules/order/order.router";
+import userRouter from "./modules/user/user.router";
+import reviewRouter from "./modules/review/review.router";
 
 const app = express();
 
-// Configure CORS middleware
 app.use(
   cors({
-    origin: [FRONTEND_URL ?? "http://localhost:3000"],
+    origin: process.env.FRONTEND_URL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
-    exposedHeaders: ["Content-Type", "Authorization", "Cookie", "Set-Cookie"],
   }),
 );
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// server health check
+app.get("/", (_req, res) => {
+  res.status(200).send("Server is running...");
+});
+
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
-app.use(express.json());
-
-app.use("/api/v1", v1Routes);
-
-app.get("/", (req, res) => {
-  res.send("Welcome to the MediStore API");
-});
-
-// not found route handler
-app.use((_req, res, next) => {
-  const error = createError(404, "Requested resource not found");
-  next(error);
-});
-
-// global error handler
-app.use(errorHandler);
+app.use("/api/category", categoryRouter);
+app.use("/api/medicine", medicineRouter);
+app.use("/api/order", orderRouter);
+app.use("/api/user", userRouter);
+app.use("/api/review", reviewRouter);
 
 export default app;
