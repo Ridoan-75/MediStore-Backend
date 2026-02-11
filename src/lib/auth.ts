@@ -36,7 +36,7 @@ export const auth = betterAuth({
       role: {
         type: "string",
         required: true,
-        defaultValue: "user",
+        defaultValue: "CUSTOMER",
       },
       dob: {
         type: "date",
@@ -56,8 +56,8 @@ export const auth = betterAuth({
   },
   plugins: [
     admin({
-      adminRoles: [Role.CUSTOMER, Role.SELLER, Role.ADMIN],
-      defaultRole: "user",
+      adminRoles: [Role.ADMIN],
+      defaultRole: "CUSTOMER",
       roles: {
         [Role.ADMIN]: adminRole,
         [Role.SELLER]: sellerRole,

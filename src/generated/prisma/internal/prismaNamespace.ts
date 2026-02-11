@@ -1291,7 +1291,10 @@ export const SessionScalarFieldEnum = {
   id: 'id',
   sessionToken: 'sessionToken',
   userId: 'userId',
-  expires: 'expires',
+  expiresAt: 'expiresAt',
+  token: 'token',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1301,17 +1304,9 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 
 export const AccountScalarFieldEnum = {
   id: 'id',
+  accountId: 'accountId',
+  providerId: 'providerId',
   userId: 'userId',
-  type: 'type',
-  provider: 'provider',
-  providerAccountId: 'providerAccountId',
-  access_token: 'access_token',
-  refresh_token: 'refresh_token',
-  id_token: 'id_token',
-  expires_at: 'expires_at',
-  token_type: 'token_type',
-  scope: 'scope',
-  session_state: 'session_state',
   password: 'password',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
