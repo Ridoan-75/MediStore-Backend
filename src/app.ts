@@ -5,14 +5,14 @@ import createError from "http-errors";
 import { FRONTEND_URL } from "./config/env";
 import { auth } from "./lib/auth";
 import { errorHandler } from "./middlewares/error-handler";
-import { v1Routes } from "./routes/v1";
+import { v1Routes } from "./routes";
 
 const app = express();
 
 // Configure CORS middleware
 app.use(
   cors({
-    origin: [FRONTEND_URL, "http://localhost:3000"],
+    origin: [FRONTEND_URL ?? "http://localhost:3000"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],

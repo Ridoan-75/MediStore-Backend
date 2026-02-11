@@ -1,5 +1,5 @@
-import { OrderStatus, Review } from "../../../generated/prisma/client";
-import { ReviewWhereInput } from "../../../generated/prisma/models";
+import { OrderStatus, Review } from "../../generated/prisma/client";
+import { ReviewWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 import { PaginationOptions } from "../../types";
 

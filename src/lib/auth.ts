@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { admin } from "better-auth/plugins";
-import { Role } from "../../generated/prisma/enums";
+
 import {
   BETTER_AUTH_URL,
   FRONTEND_URL,
@@ -10,6 +10,7 @@ import {
 } from "../config/env";
 import { adminRole, customerRole, sellerRole } from "../config/permission";
 import { prisma } from "./prisma";
+import { Role } from "../generated/prisma/enums";
 
 export const auth = betterAuth({
   baseURL: BETTER_AUTH_URL,

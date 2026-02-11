@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import { Category } from "../../../generated/prisma/client";
+import { Category } from "../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const createCategory = async (payload: Category) => {

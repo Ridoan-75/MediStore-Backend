@@ -1,7 +1,7 @@
 import createError from "http-errors";
-import { Medicine, Prisma } from "../../../generated/prisma/client";
+import { Medicine, Prisma } from "../../generated/prisma/client";
 
-import { MedicineWhereInput } from "../../../generated/prisma/models";
+import { MedicineWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 import { FilterOptions, PaginationOptions } from "../../types";
 

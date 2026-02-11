@@ -1,6 +1,6 @@
 import createError from "http-errors";
-import { OrderStatus, Prisma } from "../../../generated/prisma/client";
-import { OrderWhereInput } from "../../../generated/prisma/models";
+import { OrderStatus, Prisma } from "../../generated/prisma/client";
+import { OrderWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 import { PaginationOptions, TOrderPayload } from "../../types";
 

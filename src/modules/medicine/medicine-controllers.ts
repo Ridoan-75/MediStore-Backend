@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
-import { Medicine } from "../../../generated/prisma/client";
+import { Medicine } from "../../generated/prisma/client";
 import { filter } from "../../helpers/filter";
 import { getSlug } from "../../helpers/get-slug";
 import { paginationSort } from "../../helpers/pagination-sort";

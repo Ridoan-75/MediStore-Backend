@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
-import { OrderStatus } from "../../../generated/prisma/client";
+import { OrderStatus } from "../../generated/prisma/client";
 import { paginationSort } from "../../helpers/pagination-sort";
 import { sendJSON } from "../../helpers/send-json";
 import { TOrderPayload } from "../../types";

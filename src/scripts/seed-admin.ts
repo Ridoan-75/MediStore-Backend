@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import { Role } from "../../generated/prisma/client";
+import { Role } from "../generated/prisma/client";
 import { auth } from "../lib/auth";
 import { prisma } from "../lib/prisma";
 

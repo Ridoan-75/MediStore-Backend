@@ -1,4 +1,4 @@
-import { User } from "../../../generated/prisma/client";
+import { Role, User } from "@prisma/client";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { PaginationOptions } from "../../types";
@@ -24,7 +24,9 @@ const getAllUsers = async ({
       [sortBy]: sortOrder,
     },
   });
+
   const total = await prisma.user.count();
+
   return {
     data,
     pagination: {
@@ -54,18 +56,25 @@ const updateUserById = async (
   id: string,
   data: Partial<Omit<User, "id" | "createdAt" | "updatedAt" | "email">>,
 ) => {
+  const { role, ...rest } = data;
+
   const updatedUser = await prisma.user.update({
     where: { id },
-    data,
+    data: {
+      ...rest,
+      ...(role ? { role: role as Role } : {}),
+    },
   });
+
   return updatedUser;
 };
+
 
 const signup = async (payload: {
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: Role;
 }) => {
   const { role, name, email, password } = payload;
 

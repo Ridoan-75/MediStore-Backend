@@ -1,6 +1,7 @@
 import { ParsedQs } from "qs";
-import { MedicineStatus } from "../../generated/prisma/enums";
+
 import { getSlug } from "./get-slug";
+import { MedicineStatus } from "../generated/prisma/enums";
 
 export const filter = (query: ParsedQs) => {
   const { search } = query;

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { Prisma } from "../../generated/prisma/client";
+
 import { sendJSON } from "../helpers/send-json";
+import { Prisma } from "../generated/prisma/client";
 
 export const errorHandler = (
   err: Error,

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
-import { Review } from "../../../generated/prisma/client";
+import { Review } from "../../generated/prisma/client";
 import { paginationSort } from "../../helpers/pagination-sort";
 import { sendJSON } from "../../helpers/send-json";
 import { reviewServices } from "./review-services";

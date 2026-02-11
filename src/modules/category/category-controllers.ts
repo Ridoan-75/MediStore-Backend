@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
-import { Category } from "../../../generated/prisma/client";
+import { Category } from "../../generated/prisma/client";
 import { getSlug } from "../../helpers/get-slug";
 import { sendJSON } from "../../helpers/send-json";
 import { categoryServices } from "./category-services";

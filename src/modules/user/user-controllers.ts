@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
-import { Role } from "../../../generated/prisma/enums";
+import { Role } from "../../generated/prisma/enums";
 import { paginationSort } from "../../helpers/pagination-sort";
 import { sendJSON } from "../../helpers/send-json";
 import { userServices } from "./user-services";
