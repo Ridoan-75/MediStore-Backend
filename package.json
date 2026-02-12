@@ -8,8 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
     "seed:admin": "npx tsx src/script/seedAdmin.ts",
-    "build": "prisma generate && tsup src/index.ts --format esm --platform node --target node20 --outDir api --external pg-native",
-    "postinstall": "prisma generate"
+    "build": "prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir api --external pg-native --external dotenv --external @prisma/client --external @prisma/adapter-pg --external better-auth --external express --external cors --external nodemailer --external pg",
+    "postinstall": "prisma generate",
+    "start": "node api/server.js"
   },
   "repository": {
     "type": "git",
