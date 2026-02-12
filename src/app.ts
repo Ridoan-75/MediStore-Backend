@@ -10,9 +10,12 @@ import reviewRouter from "./modules/review/review.router";
 
 const app = express();
 
+// Multiple frontend URLs support
+const allowedOrigins = process.env.FRONTEND_URL?.split(',') || ['http://localhost:3000'];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
