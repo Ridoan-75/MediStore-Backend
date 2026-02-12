@@ -4,26 +4,23 @@
     // File Layout
     // "rootDir": "./src",
     "outDir": "./dist",
-
-    // Environment 
+    // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "ES2023",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
     // and npm install -D @types/node
-
     // Other Outputs
-    // "sourceMap": true,
-    // "declaration": true,
-    // "declarationMap": true,
-
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-
     // Style Options
     // "noImplicitReturns": true,
     // "noImplicitOverride": true,
@@ -31,12 +28,9 @@
     // "noUnusedParameters": true,
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
-
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-
     // Recommended Options
     "strict": true,
+    "esModuleInterop": true,
     // "jsx": "react-jsx",
     // "verbatimModuleSyntax": true,
     "isolatedModules": true,
@@ -44,6 +38,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "generated/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
