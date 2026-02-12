@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tsx watch src/server.ts",
-    "seed:admin": "npx tsx src/script/seedAdmin.ts",
-    "build": "prisma generate && tsup src/index.ts --format esm --platform node --target node20 --outDir api --external pg-native",
-    "postinstall": "prisma generate"
-  },
+"scripts": {
+  "dev": "npx tsx watch src/server.ts",
+  "build": "prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir dist --external pg-native",
+  "start": "node dist/server.mjs",
+  "postinstall": "prisma generate"
+},
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ridoan-75/MediStore-Backend.git"
@@ -35,6 +35,7 @@
     "nodemon": "^3.1.11",
     "prisma": "^7.3.0",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
   "dependencies": {
