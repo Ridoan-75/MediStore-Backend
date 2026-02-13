@@ -53,8 +53,8 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// Better Auth - correct wildcard syntax
-app.all("/api/auth/:splat*", toNodeHandler(auth));
+// Better Auth - use app.use instead of app.all for wildcard routes
+app.use("/api/auth", toNodeHandler(auth));
 
 app.use("/api/category", categoryRouter);
 app.use("/api/medicine", medicineRouter);
