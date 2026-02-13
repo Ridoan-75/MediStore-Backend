@@ -15,32 +15,18 @@ export const auth = betterAuth({
   },
 
   trustedOrigins: [
+    "http://localhost:3000",
+    "http://localhost:3001",
     process.env.FRONTEND_URL!,
-    "https://medistoreclient.vercel.app",
+    "https://698ec87a383f880008b269ac--medistore-client.netlify.app",
   ],
 
   user: {
     additionalFields: {
-      role: {
-        type: "string",
-        // defaultValue: "CUSTOMER",
-        required: false,
-      },
-      phone: {
-        type: "string",
-
-        required: false,
-      },
-      address: {
-        type: "string",
-
-        required: false,
-      },
-      status: {
-        type: "string",
-        defaultValue: "ACTIVE",
-        required: false,
-      },
+      role: { type: "string", required: false },
+      phone: { type: "string", required: false },
+      address: { type: "string", required: false },
+      status: { type: "string", defaultValue: "ACTIVE", required: false },
     },
   },
 
