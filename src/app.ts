@@ -52,7 +52,7 @@ app.get("/health", (_req, res) => {
 });
 
 // Better Auth
-app.use("/api/auth", toNodeHandler(auth));
+app.all("/api/auth/*any", toNodeHandler(auth));
 
 app.use("/api/category", categoryRouter);
 app.use("/api/medicine", medicineRouter);
