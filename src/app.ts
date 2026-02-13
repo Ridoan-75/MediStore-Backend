@@ -10,10 +10,13 @@ import reviewRouter from "./modules/review/review.router";
 
 const app = express();
 
+// ✅ Trust proxy (Render.com এর জন্য)
+app.set('trust proxy', 1);
+
 const allowedOrigins = [
-  "https://medistore-client-lime.vercel.app",
+  process.env.FRONTEND_URL || "https://medistore-client-lime.vercel.app",
   "http://localhost:3000",
-];
+].filter(Boolean);
 
 app.use(
   cors({
@@ -28,6 +31,8 @@ app.use(
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // ✅
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'], // ✅
   }),
 );
 
@@ -51,8 +56,8 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// Better Auth
-app.all("/api/auth/*splat", toNodeHandler(auth));
+// ✅ Better Auth (improved)
+app.use("/api/auth", toNodeHandler(auth));
 
 app.use("/api/category", categoryRouter);
 app.use("/api/medicine", medicineRouter);
