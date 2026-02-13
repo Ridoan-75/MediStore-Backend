@@ -17,7 +17,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000",
     process.env.FRONTEND_URL!,
-    "https://698ec87a383f880008b269ac--medistore-client.netlify.app",
+    "https://medistore-client-lime.vercel.app",
   ],
 
   user: {
