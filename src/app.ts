@@ -10,33 +10,15 @@ import reviewRouter from "./modules/review/review.router";
 
 const app = express();
 
-// Multiple frontend URLs support including localhost for development
-const allowedOrigins = [
-  "https://698ec87a383f880008b269ac--medistore-client.netlify.app",
-  "http://localhost:3000"
-];
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, Postman, etc.)
-      if (!origin) return callback(null, true);
-      
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log(`Blocked by CORS: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  }),
-);
+// ✅ Simple CORS - Allow all origins
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// server health check
 app.get("/", (_req, res) => {
   res.status(200).json({ 
     status: "success",
@@ -45,7 +27,6 @@ app.get("/", (_req, res) => {
   });
 });
 
-// Health check endpoint
 app.get("/health", (_req, res) => {
   res.status(200).json({ 
     status: "healthy",
@@ -53,16 +34,13 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// Better Auth - use app.use instead of app.all for wildcard routes
 app.use("/api/auth", toNodeHandler(auth));
-
 app.use("/api/category", categoryRouter);
 app.use("/api/medicine", medicineRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/user", userRouter);
 app.use("/api/review", reviewRouter);
 
-// 404 handler
 app.use((_req, res) => {
   res.status(404).json({ 
     status: "error",
@@ -70,7 +48,6 @@ app.use((_req, res) => {
   });
 });
 
-// Error handler
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ 
