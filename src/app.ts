@@ -10,7 +10,6 @@ import reviewRouter from "./modules/review/review.router";
 
 const app = express();
 
-// ✅ Trust proxy (Render.com এর জন্য)
 app.set('trust proxy', 1);
 
 const allowedOrigins = [
