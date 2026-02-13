@@ -13,8 +13,7 @@ const app = express();
 // Multiple frontend URLs support including localhost for development
 const allowedOrigins = [
   "https://698ec87a383f880008b269ac--medistore-client.netlify.app",
-  "http://localhost:3000",
-  "http://localhost:5173", // Vite default port
+  "http://localhost:3000"
 ];
 
 app.use(
@@ -54,7 +53,8 @@ app.get("/health", (_req, res) => {
   });
 });
 
-app.all("/api/auth/*", toNodeHandler(auth));
+// Better Auth - correct wildcard syntax
+app.all("/api/auth/:splat*", toNodeHandler(auth));
 
 app.use("/api/category", categoryRouter);
 app.use("/api/medicine", medicineRouter);
